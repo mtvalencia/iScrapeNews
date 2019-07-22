@@ -31,3 +31,13 @@ mongoose.connect("mongodb://localhost/iscrape", { useNewUrlParser: true });
 app.listen(PORT, function() {
     console.log("App running on port " + PORT + "!");
   });
+
+
+//Routes
+router.get("/", function(req,res) {
+    res.render("index");
+});
+
+router.get("/saved", function(req,res) {
+    res.render("saved");
+});
