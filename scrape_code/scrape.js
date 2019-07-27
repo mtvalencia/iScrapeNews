@@ -5,20 +5,29 @@ var scrape = function (cb) {
     request("https://www.sfchronicle.com/vault/fromthearchive/", function (err, res, body) {
         var $ = cheerio.load(body);
         var articles = [];
-        $(".sub_topstories_item ").each(function(i, element) {
+        $(".sub_topstories_item").each(function(i, element) {
             var head = $(this).children(".headline").text().trim();
+            var author = $(this).children(".byline").text().trim();
             var summary = $(this).children(".blurb").text().trim();
-            var url = $(this).children(".without_u").text().trim();
-            // var photo = $(this).children(".blurb").text().trim(); //Later
+            var url = $(this).children("a").attr("href").trim();
             
+            if(head && author && summary){
+                var headClean = head.replace(/(\r\n|\n|\r|\t|\s+)/gm, " ").trim();
+                var authorClean = author.replace(/(\r\n|\n|\r|\t|\s+)/gm, " ").trim();
+                var summaryClean = summary.replace(/(\r\n|\n|\r|\t|\s+)/gm, " ").trim();
+            }
+
             var content = {
-                headline: head,
-                summary: summary,
-                url: url
+                headline: headClean,
+                author: authorClean,
+                summary: summaryClean,
+                url: "https://www.sfchronicle.com" + url
+
             };
             articles.push(content);
+            console.log(content);
         });
-        cd(articles);
+        cb(articles);
       });
   };
 
